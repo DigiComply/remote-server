@@ -1,0 +1,30 @@
+import requests
+import json
+
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+@csrf_exempt
+def index(request):
+  print('Welcome')
+  
+  if request.method == 'POST':
+    data = json.loads(request.body)
+    url = data.get('url')
+    headers = data.get('headers')
+    method = data.get('method')
+    timeout = int(data.get('timeout', 0))
+    data = data.get('data')
+
+    try:
+      if method == 'GET':
+        res = requests.get(url=url, headers=headers, timeout=timeout)
+        return HttpResponse(res.content, status=200)
+      elif method == 'POST':
+        res = requests.post(url=url, headers=headers, timeout=timeout, data=data)
+        return HttpResponse(res.content, status=200)
+    
+    except Exception as e:
+      return HttpResponse(e, status=500)
+
+  return HttpResponse("OK", status=200)
