@@ -19,10 +19,10 @@ def index(request):
     try:
       if method == 'GET':
         res = requests.get(url=url, headers=headers, timeout=timeout)
-        return HttpResponse(res.content, status=200)
+        return HttpResponse(res.content, status=res.status_code)
       elif method == 'POST':
         res = requests.post(url=url, headers=headers, timeout=timeout, data=data)
-        return HttpResponse(res.content, status=200)
+        return HttpResponse(res.content, status=res.status_code)
     
     except Exception as e:
       return HttpResponse(e, status=500)
